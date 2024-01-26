@@ -1,0 +1,7 @@
+dependencies {
+    //Diğer tarafta hem postgre hem DataJPA ekliyorduk. Bu service de mongo ile çalışacağımız için Spring Data MongoDB kullanacağız.
+    implementation libs.springBootDataMongoDB
+    implementation libs.springBootAmqp
+    implementation libs.springBootDataRedis
+    implementation libs.springBootSecurity
+}

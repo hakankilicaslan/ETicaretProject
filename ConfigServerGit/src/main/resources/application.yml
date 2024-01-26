@@ -1,0 +1,18 @@
+server:
+  port: 8888
+
+spring:
+  zipkin:
+    enabled: true
+    base-url: ${ZIPKIN_URL}
+    service:
+      name: config-server-git-service
+  cloud:
+    config:
+      server:
+        git:
+          uri: "https://github.com/hakankilicaslan/config-server-repo12.git"
+          default-label: main
+          skip-ssl-validation: true
+          username: hakankilicaslan
+          password: ${GIT_JAVA12_KEY} #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

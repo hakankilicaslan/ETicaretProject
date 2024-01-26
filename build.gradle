@@ -1,0 +1,83 @@
+
+//ROOT build.gradle file : Ana proje olduğu belli olsun diye bunu ekledik.
+
+plugins {
+    //Buraya yazılan özellikler alttaki tüm microservice'lerde yazılmasa bile etkili olacaktır
+    id 'java'
+    id 'org.springframework.boot' version '2.7.17'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'application'
+    id 'java-library'
+}
+
+allprojects {
+    //Tüm projelerde(root+sub) gerekli ayarları belirlemek için
+    apply from: "${rootDir}/Dependencies.gradle" //Yazdığımız Dependencies.gradle dosyasının burada geçerli olmasını sağladık.
+    apply plugin: 'application'
+    group = 'com.hakan'
+    version = 'v0.1'
+    sourceCompatibility = JavaVersion.VERSION_19
+}
+
+subprojects {
+    //Sadece sub projelerde yani module olarak açılan serviceler için gerekli ayarları belirliyoruz
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+
+    buildscript {
+        dependencies {
+            classpath("org.springframework.boot:spring-boot-gradle-plugin:${versions.springBoot}")
+        }
+    }
+
+    tasks.named('bootBuildImage') {
+        builder = 'paketobuildpacks/builder-jammy-base:latest'
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding='UTF-8'
+    }
+}
+
+allprojects {
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    dependencies {
+        //Bütün projeye yayılacak bağımlılıkları buraya yazıyoruz.
+        //Yazarken Dependencies.gradle dosyasındaki libs içindekileri çekeceğiz.
+        implementation libs.springBootWeb
+        implementation libs.springCloudOpenFeign
+        implementation libs.springBootValidation
+        implementation libs.springCloudConfigClient
+        implementation libs.springCloudSleuth
+        implementation libs.springCloudSleuthZipkin
+
+        compileOnly libs.lombok
+        annotationProcessor libs.lombok
+
+        implementation libs.mapstruct
+        annotationProcessor libs.mapstructProcessor
+
+        implementation libs.swagger
+        implementation libs.jwt
+    }
+}
+
+
+

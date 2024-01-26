@@ -1,0 +1,36 @@
+server:
+  port: 9091
+#9090dan Auth ayağa kalktığı için User içinde 9091 seçiyoruz.
+#MongoDBCompass içine girdiğimiz bilgileri gerekli yerlere giriyoruz. 5432 yerine port olarak 27017 giriyoruz.
+#Nosql tarafında mongo da mesela sadece data girilen kısımlar tutuluyor yani null olanlar DB içinde tutulmuyor
+spring:
+  security:
+    user:
+      name: java12
+      password: 1234
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: user
+  zipkin:
+    enabled: true
+    base-url: http://localhost:9411
+    service:
+      name: user-service
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: UserProfileDB
+      username: defaultUser
+      password: hakan.456
+
+userserviceconfig:
+  secrets:
+    secret-key: ${JAVA12_SECRETKEY}
+    issuer: ${JAVA12_ISSUER}
+
+redisconfig:
+  host: localhost
+  port: 6379
